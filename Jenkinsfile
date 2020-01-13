@@ -34,9 +34,14 @@ pipeline {
       }
     }
   }
-  post {
+post {
     always {
-        archiveArtifacts artifacts: 'zap-report.html', fingerprint: true
+      recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
+      recordIssues enabledForFailure: true, tool: checkStyle()
+      recordIssues enabledForFailure: true, tool: spotBugs()
+      recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
+      recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
     }
-}
+  }
+
 }
